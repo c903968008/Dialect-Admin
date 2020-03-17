@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.search.name" clearable placeholder="用户名" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.search.accuracy_min" clearable placeholder="正确率区间" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.search.nickName" clearable placeholder="用户名" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input-number controls-position="right" :min="0" v-model="listQuery.search.accuracy_min" clearable placeholder="正确率区间" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       —
-      <el-input v-model="listQuery.search.accuracy_max" clearable placeholder="正确率区间" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input-number controls-position="right" :max="100" v-model="listQuery.search.accuracy_max" clearable placeholder="正确率区间" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -26,7 +26,7 @@
       </el-table-column>
       <el-table-column label="头像" align="center" width="100px">
         <template slot-scope="{row}">
-            <img :src="row.avatarUrl" height="50" >
+          <img :src="row.avatarUrl" height="50">
         </template>
       </el-table-column>
       <el-table-column label="用户名" width="180px" align="center">
@@ -51,7 +51,7 @@
       </el-table-column>
       <el-table-column label="证书" width="210px" align="center">
         <template slot-scope="{row}">
-          <span v-for="item in row.certificates">{{ item.name }} </br> </span> 
+          <span v-for="item in row.certificates">{{ item.name }} </br> </span>
         </template>
       </el-table-column>
       </el-table-column>
@@ -98,8 +98,8 @@ export default {
         page: 1,
         size: 20,
         search: {
-          name: undefined,
-          accuracy_min: undefined, 
+          nickName: undefined,
+          accuracy_min: undefined,
           accuracy_max: undefined
         }
       },
@@ -114,7 +114,7 @@ export default {
     getList() {
       this.listLoading = true
       getAll(this.listQuery).then(response => {
-        if (Array.isArray(response.data.reslut)){
+        if (Array.isArray(response.data.reslut)) {
           this.list = response.data.reslut
         } else {
           this.list = Object.values(response.data.reslut)
@@ -132,11 +132,11 @@ export default {
     handleDelete(row) {
       const id = { id: row.id }
       deleteOne(id).then(response => {
-        this.$notify({
-          message: '删除成功',
-          type: 'success',
-          duration: 2000
-        })
+        // this.$notify({
+        //   message: '删除成功',
+        //   type: 'success',
+        //   duration: 2000
+        // })
       })
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)

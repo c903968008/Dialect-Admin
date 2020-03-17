@@ -10,43 +10,43 @@
 
       <div class="createPost-main-container">
 
-            <div class="postInfo-container">
-              <el-row>
-                <el-col :span="8">
-                  <el-form-item prop="title" label-width="45px" label="标题:" class="postInfo-container-item">
-                    <el-input v-model="postForm.title" placeholder="请输入标题"></el-input>
-                  </el-form-item>
-                </el-col>
+        <div class="postInfo-container">
+          <el-row>
+            <el-col :span="8">
+              <el-form-item prop="title" label-width="45px" label="标题:" class="postInfo-container-item">
+                <el-input v-model="postForm.title" placeholder="请输入标题" />
+              </el-form-item>
+            </el-col>
 
-                <el-col :span="16">
-                  <el-form-item prop="time" label-width="120px" label="发布时间:" class="postInfo-container-item">
-                    <el-date-picker v-model="postForm.time" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="请选择发布时间" />
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </div>
+            <el-col :span="16">
+              <el-form-item prop="time" label-width="120px" label="发布时间:" class="postInfo-container-item">
+                <el-date-picker v-model="postForm.time" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="请选择发布时间" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
 
         <el-form-item prop="image" style="margin-bottom: 30px;" label="图片:">
 
           <div class="upload-container">
             <el-upload
+              ref="upload"
+              v-model="imageUrl"
               :multiple="false"
               class="image-uploader"
               action="action"
               :show-file-list="false"
-              ref="upload"
               :on-change="imgChange"
               :before-upload="beforeimgUpload"
               accept="image/png,image/gif,image/jpg,image/jpeg"
               drag
-              v-model="imageUrl"
             >
               <i class="el-icon-upload" />
               <div class="el-upload__text">
                 将文件拖到此处，或<em>点击上传</em>
               </div>
             </el-upload>
-            <div v-show="imageUrl.length>1"  class="image-preview image-app-preview">
+            <div v-show="imageUrl.length>1" class="image-preview image-app-preview">
               <div class="image-preview-wrapper">
                 <img :src="imageUrl">
               </div>
@@ -83,7 +83,7 @@ const defaultForm = {
 
 export default {
   name: 'ArticleDetail',
-  components: { Tinymce, MDinput, Upload, Sticky,  CommentDropdown, PlatformDropdown, SourceUrlDropdown },
+  components: { Tinymce, MDinput, Upload, Sticky, CommentDropdown, PlatformDropdown, SourceUrlDropdown },
   props: {
     isEdit: {
       type: Boolean,
@@ -127,7 +127,7 @@ export default {
       rules: {
         time: [{ validator: validateRequire }],
         title: [{ validator: validateTitle }],
-        content: [{ validator: validateRequire }],
+        content: [{ validator: validateRequire }]
       },
       tempRoute: {}
     }
@@ -145,20 +145,20 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
-    imgChange(file){
+    imgChange(file) {
       this.imageUrl = URL.createObjectURL(file.raw)
     },
     beforeimgUpload(file) {
       this.formData = new FormData()
-      this.formData.append('image',file)
+      this.formData.append('image', file)
       return false
     },
-    //编辑时 获取信息
+    // 编辑时 获取信息
     fetchData(id) {
-      show({id:id}).then(response => {
+      show({ id: id }).then(response => {
         console.log(response)
         this.postForm = response.data
-        this.postForm.image = "http://127.0.0.1:8000/activity/" + response.data.image
+        this.postForm.image = 'http://127.0.0.1:8000/activity/' + response.data.image
         this.imageUrl = this.postForm.image
         // set tagsview title
         this.setTagsViewTitle()
@@ -178,10 +178,10 @@ export default {
       const title = '修改活动'
       document.title = `${title}`
     },
-    //提交
+    // 提交
     submitForm() {
       console.log(this.postForm)
-      if(this.imageUrl === ''){
+      if (this.imageUrl === '') {
         this.$message({
           message: '图片为必传项',
           type: 'error'
@@ -191,29 +191,29 @@ export default {
           if (valid) {
             this.loading = true
 
-            if(this.formData == undefined){
+            if (this.formData == undefined) {
               this.formData = new FormData()
             }
             this.formData.append('title', this.postForm.title)
             this.formData.append('content', this.postForm.content)
-            let time = this.dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.postForm.time))
+            const time = this.dateFormat('YYYY-mm-dd HH:MM:SS', new Date(this.postForm.time))
             this.formData.append('time', time)
             this.$refs.upload.submit()
             // console.log(this.formData.get('title'))
             // console.log(this.formData.get('content'))
             // console.log(this.formData.get('time'))
 
-            if(this.isEdit){
+            if (this.isEdit) {
               this.formData.append('id', this.postForm.id)
               update(this.formData).then(res => {
-                  console.log(res)
-                  this.$notify({
-                    message: '修改成功',
-                    type: 'success',
-                    duration: 2000
-                  })
-                this.loading = false
+                console.log(res)
+                this.$notify({
+                  message: '修改成功',
+                  type: 'success',
+                  duration: 2000
                 })
+                this.loading = false
+              })
             } else {
               create(this.formData).then(res => {
                 console.log(res)
@@ -225,30 +225,29 @@ export default {
                 this.loading = false
               })
             }
-                
           }
         })
       }
     },
 
     dateFormat(fmt, date) {
-      let ret;
+      let ret
       const opt = {
-          "Y+": date.getFullYear().toString(),        // 年
-          "m+": (date.getMonth() + 1).toString(),     // 月
-          "d+": date.getDate().toString(),            // 日
-          "H+": date.getHours().toString(),           // 时
-          "M+": date.getMinutes().toString(),         // 分
-          "S+": date.getSeconds().toString()          // 秒
-          // 有其他格式化字符需求可以继续添加，必须转化成字符串
-      };
-      for (let k in opt) {
-          ret = new RegExp("(" + k + ")").exec(fmt);
-          if (ret) {
-              fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
-          };
-      };
-      return fmt;
+        'Y+': date.getFullYear().toString(), // 年
+        'm+': (date.getMonth() + 1).toString(), // 月
+        'd+': date.getDate().toString(), // 日
+        'H+': date.getHours().toString(), // 时
+        'M+': date.getMinutes().toString(), // 分
+        'S+': date.getSeconds().toString() // 秒
+        // 有其他格式化字符需求可以继续添加，必须转化成字符串
+      }
+      for (const k in opt) {
+        ret = new RegExp('(' + k + ')').exec(fmt)
+        if (ret) {
+          fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, '0')))
+        }
+      }
+      return fmt
     }
   }
 }

@@ -74,7 +74,7 @@ export default {
   methods: {
     getCount() {
       count().then(response => {
-        this.count = response.data    
+        this.count = response.data
       })
     },
     handleSetLineChartData(type) {

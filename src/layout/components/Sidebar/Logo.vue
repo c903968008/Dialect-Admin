@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      title: '方言后台管理系统',
+      title: '方言后台管理系统'
       // logo: 'http://127.0.0.1:8089/logo.png'
     }
   }

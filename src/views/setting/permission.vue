@@ -141,7 +141,7 @@ export default {
     getList() {
       this.listLoading = true
       getAll(this.listQuery).then(response => {
-        if (Array.isArray(response.data.reslut)){
+        if (Array.isArray(response.data.reslut)) {
           this.list = response.data.reslut
         } else {
           this.list = Object.values(response.data.reslut)
@@ -225,11 +225,11 @@ export default {
     handleDelete(row) {
       const id = { id: row.id }
       deleteOne(id).then(response => {
-        this.$notify({
-          message: '删除成功',
-          type: 'success',
-          duration: 2000
-        })
+        // this.$notify({
+        //   message: '删除成功',
+        //   type: 'success',
+        //   duration: 2000
+        // })
       })
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)

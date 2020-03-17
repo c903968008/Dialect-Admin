@@ -53,8 +53,8 @@ export default {
   methods: {
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
-    },
-    
+    }
+
   }
 }
 </script>

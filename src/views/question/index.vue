@@ -2,9 +2,9 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.search.user" clearable placeholder="发布人" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.search.dialect" placeholder="正确答案" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.search.district" placeholder="地区" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input-number v-model="listQuery.search.difficulty" :min="1" :max="10" placeholder="难度" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.search.dialect" clearable placeholder="正确答案" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.search.district" clearable placeholder="地区" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input-number v-model="listQuery.search.difficulty" controls-position="right" clearable :min="1" :max="10" placeholder="难度" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -39,7 +39,7 @@
       </el-table-column>
       <el-table-column label="音频" width="320px" align="center">
         <template slot-scope="{row}">
-          <audio ref="audio" @pause="onPause" @play="onPlay" :src="row.audio" controls="controls"></audio>
+          <audio ref="audio" :src="row.audio" controls="controls" @pause="onPause" @play="onPlay" />
         </template>
       </el-table-column>
       <el-table-column label="正确答案" width="100px" align="center">
@@ -49,7 +49,7 @@
       </el-table-column>
       <el-table-column label="错误答案" width="120px" align="center">
         <template slot-scope="{row}">
-          <span v-for="item in row.wrong_arr">{{item}}<br></span>
+          <span v-for="item in row.wrong_arr">{{ item }}<br></span>
         </template>
       </el-table-column>
       <el-table-column label="难度" width="60px" align="center">
@@ -94,13 +94,13 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:30px;">
         <el-form-item label="所属省" prop="province">
-          <el-select v-model="temp.province" @change="selectProvince" class="filter-item" placeholder="请选择">
-            <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id"/>
+          <el-select v-model="temp.province" class="filter-item" placeholder="请选择" @change="selectProvince">
+            <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="所属市" prop="city">
-          <el-select v-model="temp.city" clearable @change="selectCity" class="filter-item" placeholder="请选择">
-            <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id"/>
+          <el-select v-model="temp.city" clearable class="filter-item" placeholder="请选择" @change="selectCity">
+            <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="正确答案" prop="ddid">
@@ -110,15 +110,16 @@
             remote
             reserve-keyword
             placeholder="请输入关键词"
-            :remote-method="remoteMethod">
+            :remote-method="remoteMethod"
+          >
             <el-option
               v-for="item in dialect.options"
               :key="item.value"
               :label="item.label"
-              :value="item.value">
-            </el-option>
+              :value="item.value"
+            />
           </el-select>
-        </el-form-item> 
+        </el-form-item>
         <el-form-item label="错误选择1" prop="wrong1">
           <el-input v-model="temp.wrong1" />
         </el-form-item>
@@ -129,7 +130,7 @@
           <el-input v-model="temp.wrong3" />
         </el-form-item>
         <el-form-item label="难度" prop="difficulty">
-          <el-input-number v-model="temp.difficulty" :min="1" :max="10"/>
+          <el-input-number v-model="temp.difficulty" :min="1" :max="10" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -178,10 +179,10 @@ export default {
           user: undefined,
           district: undefined,
           dialect: undefined,
-          difficulty: undefined,
+          difficulty: undefined
         }
       },
-      district:  {
+      district: {
         province: [],
         city: []
       },
@@ -190,7 +191,7 @@ export default {
         options: [],
         value: [],
         list: [],
-        loading: false,
+        loading: false
       },
       temp: {
         id: undefined,
@@ -230,64 +231,64 @@ export default {
   },
   methods: {
     // 控制音频的播放与暂停
-    startPlayOrPause () {
+    startPlayOrPause() {
       return this.audio.playing ? this.pause() : this.play()
     },
     // 播放音频
-    play () {
+    play() {
       this.$refs.audio.play()
     },
     // 暂停音频
-    pause () {
+    pause() {
       this.$refs.audio.pause()
     },
     // 当音频播放
-    onPlay () {
+    onPlay() {
       this.audio.playing = true
     },
     // 当音频暂停
-    onPause () {
+    onPause() {
       this.audio.playing = false
     },
     remoteMethod(query) {
       this.dialect.options = []
       if (query !== '') {
-        this.dialect.loading = true;
+        this.dialect.loading = true
         setTimeout(() => {
-          this.dialect.loading = false;
-          this.$set(this.dialect,'options',this.dialect.list.filter(item => {
-            return item.label.indexOf(query) > -1;
+          this.dialect.loading = false
+          this.$set(this.dialect, 'options', this.dialect.list.filter(item => {
+            return item.label.indexOf(query) > -1
           }))
-        }, 200);
-        console.log(this.dialect.options)
+        }, 200)
+        // console.log(this.dialect.options)
       } else {
-        this.dialect.options = [];
+        this.dialect.options = []
       }
     },
     getList() {
       this.listLoading = true
       getAll(this.listQuery).then(response => {
-        if (Array.isArray(response.data.reslut)){
+        if (Array.isArray(response.data.reslut)) {
           this.list = response.data.reslut
         } else {
           this.list = Object.values(response.data.reslut)
         }
         this.total = response.data.count
-        if(response.data.count != 0){
+        if (response.data.count != 0) {
           this.list.forEach(l => {
-            if (l.user_id == 0){
-              l.user= { nickName : '管理员' }
+            if (l.user_id == 0) {
+              l.user = { nickName: '管理员' }
             }
             l.audio = 'http://127.0.0.1:8000/dialect/' + l.audio
             l.wrong_arr = l.wrong.split(',')
-          });
+          })
         }
         // Just to simulate the time of the request
         this.listLoading = false
       })
     },
     getDistrict() {
-      let param = {
+      const param = {
         p_id: 0
       }
       getOption(param).then(response => {
@@ -295,34 +296,35 @@ export default {
       })
     },
     // 选择一级地区,获取二级地区
-    selectProvince(value){
+    selectProvince(value) {
       // console.log(value)
       this.$set(this.temp, 'city', undefined)
       this.$set(this.temp, 'ddid', undefined)
-      let param = {
+      const param = {
         p_id: value
       }
       getOption(param).then(response => {
         this.district.city = response.data
       })
-      let param2 = {
+      const param2 = {
         district_id: value
       }
       getOptionDialect(param2).then(response => {
         this.dialect.list = response.data.map(item => {
-          return { value: `${item.id}`, label: `${item.translation}` };
+          return { value: `${item.id}`, label: `${item.translation}` }
         })
+        // console.log('dialect_list:',this.dialect.list)
       })
     },
     // 选择二级地区，获取方言
-    selectCity(value){
+    selectCity(value) {
       this.$set(this.temp, 'ddid', undefined)
-      let param2 = {
+      const param2 = {
         district_id: value
       }
       getOptionDialect(param2).then(response => {
         this.dialect.list = response.data.map(item => {
-          return { value: `${item.id}`, label: `${item.translation}` };
+          return { value: `${item.id}`, label: `${item.translation}` }
         })
       })
     },
@@ -351,7 +353,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          if (typeof this.temp.city == 'undefined'){
+          if (typeof this.temp.city === 'undefined' || this.temp.city == "") {
             this.temp.district_id = this.temp.province
           } else {
             this.temp.district_id = this.temp.city
@@ -375,24 +377,24 @@ export default {
     handleUpdate(row) {
       // console.log(this.district)
       this.temp = Object.assign({}, row) // copy obj
-      let wrong_arr = row.wrong.split(',')
+      const wrong_arr = row.wrong.split(',')
       this.$set(this.temp, 'wrong1', wrong_arr[0])
       this.$set(this.temp, 'wrong2', wrong_arr[1])
       this.$set(this.temp, 'wrong3', wrong_arr[2])
-      let param2 = {
+      const param2 = {
         district_id: row.district_id
       }
       getOptionDialect(param2).then(response => {
         this.dialect.list = response.data.map(item => {
-          return { value: `${item.id}`, label: `${item.translation}` };
+          return { value: `${item.id}`, label: `${item.translation}` }
         })
       })
       this.temp_dialect = row.dialect.id
       this.$set(this.temp, 'ddid', row.dialect.translation)
-      if (this.temp.district.p_id == 0){
+      if (this.temp.district.p_id == 0) {
         this.$set(this.temp, 'province', this.temp.district_id)
       } else {
-        let param = {
+        const param = {
           p_id: this.temp.district.p_id
         }
         getPrevious(param).then(response => {
@@ -412,7 +414,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          if (typeof this.temp.city == 'undefined'){
+          if (typeof this.temp.city === 'undefined' || this.temp.city == "") {
             this.temp.district_id = this.temp.province
           } else {
             this.temp.district_id = this.temp.city
@@ -420,7 +422,7 @@ export default {
           this.temp.wrong = this.temp.wrong1 + ',' + this.temp.wrong2 + ',' + this.temp.wrong3
           var numReg = /^[0-9]+$/
           var numRe = new RegExp(numReg)
-          if (!numRe.test(this.temp.ddid)){
+          if (!numRe.test(this.temp.ddid)) {
             this.temp.dialect_id = this.temp_dialect
           } else {
             this.temp.dialect_id = this.temp.ddid
@@ -451,11 +453,11 @@ export default {
     handleDelete(row) {
       const id = { id: row.id }
       deleteOne(id).then(response => {
-        this.$notify({
-          message: '删除成功',
-          type: 'success',
-          duration: 2000
-        })
+        // this.$notify({
+        //   message: '删除成功',
+        //   type: 'success',
+        //   duration: 2000
+        // })
       })
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)

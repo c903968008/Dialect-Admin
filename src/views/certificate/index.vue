@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.search.name" clearable placeholder="证书名称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input-number v-model="listQuery.search.rank" :min="1" :max="10" placeholder="级别" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input-number v-model="listQuery.search.rank" clearable controls-position="right" :min="1" :max="10" placeholder="级别" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -48,6 +48,11 @@
           <span>{{ row.rank }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="描述" width="300px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.description }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="答题正确数量" width="120px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.num }}</span>
@@ -70,13 +75,13 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:30px;">
         <el-form-item label="所属省" prop="province">
-          <el-select v-model="temp.province" @change="selectProvince" class="filter-item" placeholder="请选择">
-            <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id"/>
+          <el-select v-model="temp.province" class="filter-item" placeholder="请选择" @change="selectProvince">
+            <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="所属市" prop="city">
           <el-select v-model="temp.city" clearable class="filter-item" placeholder="请选择">
-            <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id"/>
+            <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <!-- <el-form-item label="地区" prop="district_id">
@@ -170,7 +175,7 @@ export default {
           rank: undefined
         }
       },
-      district:  {
+      district: {
         province: [],
         city: []
       },
@@ -178,23 +183,23 @@ export default {
       districtValue: [],
       districtList: [],
       loading: false,
-      states: ["Alabama", "Alaska", "Arizona",
-        "Arkansas", "California", "Colorado",
-        "Connecticut", "Delaware", "Florida",
-        "Georgia", "Hawaii", "Idaho", "Illinois",
-        "Indiana", "Iowa", "Kansas", "Kentucky",
-        "Louisiana", "Maine", "Maryland",
-        "Massachusetts", "Michigan", "Minnesota",
-        "Mississippi", "Missouri", "Montana",
-        "Nebraska", "Nevada", "New Hampshire",
-        "New Jersey", "New Mexico", "New York",
-        "North Carolina", "North Dakota", "Ohio",
-        "Oklahoma", "Oregon", "Pennsylvania",
-        "Rhode Island", "South Carolina",
-        "South Dakota", "Tennessee", "Texas",
-        "Utah", "Vermont", "Virginia",
-        "Washington", "West Virginia", "Wisconsin",
-        "Wyoming"],
+      states: ['Alabama', 'Alaska', 'Arizona',
+        'Arkansas', 'California', 'Colorado',
+        'Connecticut', 'Delaware', 'Florida',
+        'Georgia', 'Hawaii', 'Idaho', 'Illinois',
+        'Indiana', 'Iowa', 'Kansas', 'Kentucky',
+        'Louisiana', 'Maine', 'Maryland',
+        'Massachusetts', 'Michigan', 'Minnesota',
+        'Mississippi', 'Missouri', 'Montana',
+        'Nebraska', 'Nevada', 'New Hampshire',
+        'New Jersey', 'New Mexico', 'New York',
+        'North Carolina', 'North Dakota', 'Ohio',
+        'Oklahoma', 'Oregon', 'Pennsylvania',
+        'Rhode Island', 'South Carolina',
+        'South Dakota', 'Tennessee', 'Texas',
+        'Utah', 'Vermont', 'Virginia',
+        'Washington', 'West Virginia', 'Wisconsin',
+        'Wyoming'],
       temp: {
         id: undefined,
         name: '',
@@ -226,9 +231,9 @@ export default {
     this.getDistrict()
   },
   // mounted() {
-      // this.districtList = this.states.map(item => {
-      //   return { value: `value:${item}`, label: `label:${item}` };
-      // });
+  // this.districtList = this.states.map(item => {
+  //   return { value: `value:${item}`, label: `label:${item}` };
+  // });
   //     console.log(this.districtList)
   //   },
   methods: {
@@ -240,7 +245,7 @@ export default {
     //   this.imgUrl = URL.createObjectURL(file.raw);
     // },
     // uploadSuccess(res, file){
-      
+
     // },
     // remoteMethod(query) {
     //     if (query !== '') {
@@ -259,23 +264,23 @@ export default {
     getList() {
       this.listLoading = true
       getAll(this.listQuery).then(response => {
-        if (Array.isArray(response.data.reslut)){
+        if (Array.isArray(response.data.reslut)) {
           this.list = response.data.reslut
         } else {
           this.list = Object.values(response.data.reslut)
         }
         this.total = response.data.count
-        if(response.data.count != 0){
+        if (response.data.count != 0) {
           this.list.forEach(l => {
             l.image = 'http://localhost:8000/' + l.image
-          });
+          })
         }
         // Just to simulate the time of the request
         this.listLoading = false
       })
     },
     getDistrict() {
-      let param = {
+      const param = {
         p_id: 0
       }
       getOption(param).then(response => {
@@ -283,10 +288,10 @@ export default {
       })
     },
     // 选择一级地区,获取二级地区
-    selectProvince(value){
+    selectProvince(value) {
       console.log(value)
       this.$set(this.temp, 'city', undefined)
-      let param = {
+      const param = {
         p_id: value
       }
       getOption(param).then(response => {
@@ -322,7 +327,7 @@ export default {
           // console.log(this.temp)
           // console.log('province:'+this.temp.province)
           // console.log('city:'+this.temp.city)
-          if (typeof this.temp.city == 'undefined'){
+          if (typeof this.temp.city === 'undefined' || this.temp.city == "") {
             this.temp.district_id = this.temp.province
           } else {
             this.temp.district_id = this.temp.city
@@ -345,14 +350,14 @@ export default {
     handleUpdate(row) {
       // console.log(this.district)
       this.temp = Object.assign({}, row) // copy obj
-      if (this.temp.district.p_id == 0){
+      if (this.temp.district.p_id == 0) {
         this.$set(this.temp, 'province', this.temp.district_id)
       } else {
-        let param = {
+        const param = {
           p_id: this.temp.district.p_id
         }
         getPrevious(param).then(response => {
-          this.selectProvince(response.data.id);
+          this.selectProvince(response.data.id)
           this.$set(this.temp, 'province', response.data.id)
           this.$set(this.temp, 'city', this.temp.district_id)
         })
@@ -368,7 +373,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          if (typeof this.temp.city == 'undefined'){
+          if (typeof this.temp.city === 'undefined' || this.temp.city == "") {
             this.temp.district_id = this.temp.province
           } else {
             this.temp.district_id = this.temp.city
@@ -398,11 +403,11 @@ export default {
     handleDelete(row) {
       const id = { id: row.id }
       deleteOne(id).then(response => {
-        this.$notify({
-          message: '删除成功',
-          type: 'success',
-          duration: 2000
-        })
+        // this.$notify({
+        //   message: '删除成功',
+        //   type: 'success',
+        //   duration: 2000
+        // })
       })
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)

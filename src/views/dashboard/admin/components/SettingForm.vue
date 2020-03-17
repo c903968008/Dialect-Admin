@@ -1,26 +1,26 @@
 <template>
-<div>
-  <p class="col-title" style="text-align:center;">设置</p>
-  <el-form ref="form" :model="config" label-width="120px" style="margin-top:30px;">
-    <p class="setting-title">小程序设置</p>
-    <el-form-item label="用户答题数/次">
-      <el-input-number controls-position="right" v-model="config.answer_count"></el-input-number>
-    </el-form-item>
-    <p class="setting-title">方言自动审核设置</p>
-    <el-form-item label="答题总数多于">
-      <el-input-number controls-position="right" v-model="config.dialect_audit_total"></el-input-number>
-    </el-form-item>
-    <el-form-item label="正确率高于">
-      <el-input-number controls-position="right" v-model="config.dialect_audit_accuracy"></el-input-number>
-    </el-form-item>
-    <el-form-item label="反馈数少于">
-      <el-input-number controls-position="right" v-model="config.feedback_count"></el-input-number>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="onSubmit">保存</el-button>
-    </el-form-item>
-  </el-form>
-</div>
+  <div>
+    <p class="col-title" style="text-align:center;">设置</p>
+    <el-form ref="form" :model="config" label-width="120px" style="margin-top:30px;">
+      <p class="setting-title">小程序设置</p>
+      <el-form-item label="用户答题数/次">
+        <el-input-number v-model="config.answer_count" controls-position="right" />
+      </el-form-item>
+      <p class="setting-title">方言自动审核设置</p>
+      <el-form-item label="答题总数多于">
+        <el-input-number v-model="config.dialect_audit_total" controls-position="right" />
+      </el-form-item>
+      <el-form-item label="正确率高于">
+        <el-input-number v-model="config.dialect_audit_accuracy" controls-position="right" />
+      </el-form-item>
+      <el-form-item label="反馈数少于">
+        <el-input-number v-model="config.feedback_count" controls-position="right" />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">保存</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
 <script>
@@ -41,14 +41,14 @@ export default {
     this.fetchData()
   },
   methods: {
-    onSubmit(){
+    onSubmit() {
       console.log(this.config)
       editConfig(this.config).then(response => {
-            this.$notify({
-              message: '保存成功',
-              type: 'success',
-              duration: 2000
-            })
+        this.$notify({
+          message: '保存成功',
+          type: 'success',
+          duration: 2000
+        })
       })
     },
     fetchData() {

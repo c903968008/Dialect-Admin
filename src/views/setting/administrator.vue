@@ -29,7 +29,7 @@
       </el-table-column>
       <el-table-column label="头像" align="center" width="100px">
         <template slot-scope="{row}">
-          <img :src="row.avatar" height="50" >
+          <img :src="row.avatar" height="50">
         </template>
       </el-table-column>
       <el-table-column label="管理员名称" width="210px" align="center">
@@ -39,7 +39,7 @@
       </el-table-column>
       <el-table-column label="角色" width="210px" align="center">
         <template slot-scope="{row}">
-          <span v-for="item in row.roles">{{ item.name }} </br> </span> 
+          <span v-for="item in row.roles">{{ item.name }} </br> </span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="250px" class-name="small-padding fixed-width">
@@ -60,15 +60,16 @@
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:30px;">
         <el-form-item label="头像" prop="avatar">
           <el-upload
+            ref="upload"
             class="avatar-uploader"
             action="action"
             :show-file-list="false"
-            ref="upload"
             :on-change="avatarChange"
             :before-upload="beforeAvatarUpload"
-            accept="image/png,image/gif,image/jpg,image/jpeg">
+            accept="image/png,image/gif,image/jpg,image/jpeg"
+          >
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </el-form-item>
         <el-form-item label="管理员名称" prop="name">
@@ -83,8 +84,8 @@
               v-for="item in role"
               :key="item.id"
               :label="item.name"
-              :value="item.id">
-            </el-option>
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
       </el-form>
@@ -99,15 +100,16 @@
       <el-form ref="dataForm" :rules="rulesEdit" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:30px;">
         <el-form-item label="头像" prop="avatar">
           <el-upload
+            ref="upload"
             class="avatar-uploader"
             action="action"
             :show-file-list="false"
-            ref="upload"
             :on-change="avatarChange"
             :before-upload="beforeAvatarUpload"
-            accept="image/png,image/gif,image/jpg,image/jpeg">
+            accept="image/png,image/gif,image/jpg,image/jpeg"
+          >
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </el-form-item>
         <el-form-item label="管理员名称" prop="name">
@@ -122,8 +124,8 @@
               v-for="item in role"
               :key="item.id"
               :label="item.name"
-              :value="item.id">
-            </el-option>
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
       </el-form>
@@ -206,12 +208,12 @@ export default {
     this.getRole()
   },
   methods: {
-    avatarChange(file){
+    avatarChange(file) {
       this.imageUrl = URL.createObjectURL(file.raw)
     },
     beforeAvatarUpload(file) {
       this.formData = new FormData()
-      this.formData.append('avatar',file)
+      this.formData.append('avatar', file)
       return false
     },
     getRole() {
@@ -222,7 +224,7 @@ export default {
     getList() {
       this.listLoading = true
       getAll(this.listQuery).then(response => {
-        if (Array.isArray(response.data.reslut)){
+        if (Array.isArray(response.data.reslut)) {
           this.list = response.data.reslut
         } else {
           this.list = Object.values(response.data.reslut)
@@ -230,7 +232,7 @@ export default {
         this.total = response.data.count
         this.list.forEach(list => {
           list.avatar = 'http://127.0.0.1:8000/avatars/' + list.avatar
-        });
+        })
         // Just to simulate the time of the request
         this.listLoading = false
       })
@@ -259,7 +261,7 @@ export default {
     },
     // 添加
     createData() {
-      if (this.imageUrl == ''){
+      if (this.imageUrl == '') {
         this.formData = new FormData()
       }
       this.formData.append('name', this.temp.name)
@@ -285,7 +287,7 @@ export default {
     // 编辑按钮弹框
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
-      this.$set( this.temp, 'role_ids', this.temp.roles.map(function (role) {
+      this.$set(this.temp, 'role_ids', this.temp.roles.map(function(role) {
         return role.id
       }))
       this.dialogStatus = 'update'
@@ -303,17 +305,17 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          if (this.imageUrl.substr(0,4) == 'http'){
+          if (this.imageUrl.substr(0, 4) == 'http') {
             this.formData = new FormData()
           }
           this.formData.append('id', this.temp.id)
           this.formData.append('name', this.temp.name)
-          if(this.temp.password != undefined){
+          if (this.temp.password != undefined) {
             this.formData.append('password', this.temp.password)
           }
           this.formData.append('role_ids', this.temp.role_ids)
           this.$refs.upload.submit()
-          console.log({ok:this.temp})
+          console.log({ ok: this.temp })
           update(this.formData).then(response => {
             for (const v of this.list) {
               if (v.id === this.temp.id) {
@@ -337,11 +339,11 @@ export default {
     handleDelete(row) {
       const id = { id: row.id }
       deleteOne(id).then(response => {
-        this.$notify({
-          message: '删除成功',
-          type: 'success',
-          duration: 2000
-        })
+        // this.$notify({
+        //   message: '删除成功',
+        //   type: 'success',
+        //   duration: 2000
+        // })
       })
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)

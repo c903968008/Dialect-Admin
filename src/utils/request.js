@@ -76,13 +76,13 @@ service.interceptors.response.use(
     console.log(error.message) // for debug
 
     if (error.message.indexOf('400') !== -1) {
+      router.back()
       Notification({
         message: '没有权限',
         type: 'error',
         duration: 5 * 1000
       })
     } else if (error.message.indexOf('422') !== -1) {
-      router.back()
       Notification({
         message: '请规范填写',
         type: 'error',

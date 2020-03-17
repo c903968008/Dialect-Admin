@@ -4,21 +4,13 @@
       <el-input v-model="listQuery.search.user" clearable placeholder="用户名" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="listQuery.search.content" clearable placeholder="内容" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="listQuery.search.pre_translation" clearable placeholder="原答案" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.search.checked" class="filter-item" clearable placeholder="是否查看" style="width: 110px;">
+      <el-select v-model="listQuery.search.status" class="filter-item" clearable placeholder="状态" style="width: 110px;">
         <el-option
-          v-for="item in checkOptions"
+          v-for="item in statusOptions"
           :key="item.value"
           :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-      <el-select v-model="listQuery.search.accepted" class="filter-item" clearable placeholder="是否接受" style="width: 110px;">
-        <el-option
-          v-for="item in acceptOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
+          :value="item.value"
+        />
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
@@ -46,12 +38,7 @@
       </el-table-column>
       <el-table-column label="音频" width="320px" align="center">
         <template slot-scope="{row}">
-          <audio ref="audio" @pause="onPause" @play="onPlay" :src="row.question.audio" controls="controls"></audio>
-        </template>
-      </el-table-column>
-      <el-table-column label="内容" width="160px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.content }}</span>
+          <audio ref="audio" :src="row.question.audio" controls="controls" @pause="onPause" @play="onPlay" />
         </template>
       </el-table-column>
       <el-table-column label="原答案" width="120px" align="center">
@@ -64,14 +51,14 @@
           <span>{{ row.translation }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否查看" width="100px" align="center">
+      <el-table-column label="内容" width="160px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.checked }}</span>
+          <span>{{ row.content }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否接受" width="100px" align="center">
+      <el-table-column label="状态" width="100px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.accepted }}</span>
+          <span>{{ row.status }}</span>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" width="160px" align="center">
@@ -100,7 +87,7 @@
           <span>{{ question.user.nickName }}</span>
         </el-form-item>
         <el-form-item label="音频">
-          <audio ref="audio" @pause="onPause" @play="onPlay" :src="question.audio" controls="controls"></audio>
+          <audio ref="audio" :src="question.audio" controls="controls" @pause="onPause" @play="onPlay" />
         </el-form-item>
         <el-form-item label="地区">
           <span>{{ question.district.name }}</span>
@@ -143,19 +130,15 @@ export default {
   directives: { waves },
   data() {
     return {
-      checkOptions: [{
+      statusOptions: [{
         value: 0,
-        label: "未查看"
-      },{
+        label: '未查看'
+      }, {
         value: 1,
-        label: "已查看"
-      }],
-      acceptOptions: [{
-        value: 0,
-        label: "未接受"
-      },{
-        value: 1,
-        label: "已接受"
+        label: '未接受'
+      }, {
+        value: 2,
+        label: '已接受'
       }],
       audio: {
         playing: false
@@ -175,7 +158,7 @@ export default {
         wrong2: '',
         wrong3: '',
         like: 0,
-        difficulty: 0,
+        difficulty: 0
       },
       tableKey: 0,
       list: null,
@@ -186,8 +169,9 @@ export default {
         size: 20,
         search: {
           user: undefined,
-          content: undefined, 
-          pre_translation: undefined
+          content: undefined,
+          pre_translation: undefined,
+          status: undefined
         }
       },
       dialogQuestionVisible: false,
@@ -201,26 +185,23 @@ export default {
     getList() {
       this.listLoading = true
       getAll(this.listQuery).then(response => {
-        if (Array.isArray(response.data.reslut)){
+        if (Array.isArray(response.data.reslut)) {
           this.list = response.data.reslut
         } else {
           this.list = Object.values(response.data.reslut)
         }
         this.total = response.data.count
-        if(response.data.count != 0){
+        if (response.data.count != 0) {
           this.list.forEach(l => {
-            l.question.audio = "http://127.0.0.1:8000/dialect/" + l.question.audio
-            if (l.checked == 0){
-              l.checked = '否'
+            l.question.audio = 'http://127.0.0.1:8000/dialect/' + l.question.audio
+            if (l.status == 0) {
+              l.status = '未查看'
+            } else if (l.status == 1){
+              l.status = '未接受'
             } else {
-              l.checked = '是'
+              l.status = '已接受'
             }
-            if (l.accepted == 0){
-              l.accepted = '否'
-            } else {
-              l.accepted = '是'
-            }
-          });
+          })
         }
         // Just to simulate the time of the request
         this.listLoading = false
@@ -232,13 +213,13 @@ export default {
     },
     // 查看题目
     handleShow(row) {
-      const id = { id: row.question_id}
+      const id = { id: row.question_id }
       show(id).then(response => {
-        if(response.data.user_id == 0){
+        if (response.data.user_id == 0) {
           response.data.user.nickName = '管理员'
         }
         this.question = response.data
-        this.question.audio = "http://127.0.0.1:8000/dialect/" + this.question.audio
+        this.question.audio = 'http://127.0.0.1:8000/dialect/' + this.question.audio
         var wrong_arr = this.question.wrong.split(',')
         this.question.wrong1 = wrong_arr[0]
         this.question.wrong2 = wrong_arr[1]
@@ -246,29 +227,28 @@ export default {
         console.log(this.question)
       })
       this.dialogQuestionVisible = true
-
     },
     // 删除
     handleDelete(row) {
       const id = { id: row.id }
       deleteOne(id).then(response => {
-        this.$notify({
-          message: '删除成功',
-          type: 'success',
-          duration: 2000
-        })
+        // this.$notify({
+        //   message: '删除成功',
+        //   type: 'success',
+        //   duration: 2000
+        // })
       })
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)
     },
     // 当音频播放
-    onPlay () {
+    onPlay() {
       this.audio.playing = true
     },
     // 当音频暂停
-    onPause () {
+    onPause() {
       this.audio.playing = false
-    },
+    }
   }
 }
 </script>

@@ -1,5 +1,11 @@
 <template>
   <div class="app-container">
+    <div class="filter-container">
+      <el-input v-model="listQuery.search.title" clearable placeholder="标题" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        搜索
+      </el-button>
+    </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column label="id" prop="id" align="center" width="80">
         <template slot-scope="{row}">
@@ -8,7 +14,7 @@
       </el-table-column>
       <el-table-column label="图片" align="center" width="200px">
         <template slot-scope="{row}">
-          <img :src="row.image" height="50" >
+          <img :src="row.image" height="50">
         </template>
       </el-table-column>
       <el-table-column label="标题" width="200px" align="center">
@@ -64,7 +70,10 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 20
+        limit: 20,
+        search: {
+          title: undefined
+        }
       }
     }
   },
@@ -72,19 +81,23 @@ export default {
     this.getList()
   },
   methods: {
+    // 搜索
+    handleFilter() {
+      this.getList()
+    },
     getList() {
       this.listLoading = true
       getAll(this.listQuery).then(response => {
-        if (Array.isArray(response.data.reslut)){
+        if (Array.isArray(response.data.reslut)) {
           this.list = response.data.reslut
         } else {
           this.list = Object.values(response.data.reslut)
         }
         this.total = response.data.count
-        if(response.data.count != 0){
+        if (response.data.count != 0) {
           this.list.forEach(list => {
             list.image = 'http://127.0.0.1:8000/activity/' + list.image
-          });
+          })
         }
         this.listLoading = false
       })
@@ -93,11 +106,11 @@ export default {
     handleDelete(row) {
       const id = { id: row.id }
       deleteOne(id).then(response => {
-        this.$notify({
-          message: '删除成功',
-          type: 'success',
-          duration: 2000
-        })
+        // this.$notify({
+        //   message: '删除成功',
+        //   type: 'success',
+        //   duration: 2000
+        // })
       })
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)

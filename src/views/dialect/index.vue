@@ -9,8 +9,8 @@
           v-for="item in statusList"
           :key="item.value"
           :label="item.label"
-          :value="item.value">
-        </el-option>
+          :value="item.value"
+        />
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
@@ -44,7 +44,7 @@
       </el-table-column>
       <el-table-column label="音频" width="320px" align="center">
         <template slot-scope="{row}">
-          <audio ref="audio" @pause="onPause" @play="onPlay" :src="row.audio" controls="controls"></audio>
+          <audio ref="audio" :src="row.audio" controls="controls" @pause="onPause" @play="onPlay" />
         </template>
       </el-table-column>
       <el-table-column label="意译" width="120px" align="center">
@@ -59,8 +59,8 @@
       </el-table-column>
       <el-table-column label="状态" width="120px" align="center">
         <template slot-scope="{row}">
-          <el-select v-model="row.status" @visible-change="visibleStatus(row)" @change="selectStatus" class="filter-item" placeholder="请选择">
-            <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value"/>
+          <el-select v-model="row.status" class="filter-item" placeholder="请选择" @visible-change="visibleStatus(row)" @change="selectStatus">
+            <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </template>
       </el-table-column>
@@ -86,27 +86,28 @@
     <el-dialog :title="textMap[create]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:30px;">
         <el-form-item label="所属省" prop="province">
-          <el-select v-model="temp.province" @change="selectProvince(value)" class="filter-item" placeholder="请选择">
-            <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id"/>
+          <el-select v-model="temp.province" class="filter-item" placeholder="请选择" @change="selectProvince">
+            <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="所属市" prop="city">
           <el-select v-model="temp.city" clearable class="filter-item" placeholder="请选择">
-            <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id"/>
+            <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <p style="color:red;float:left;">*&nbsp;</p><el-form-item label="音频文件" prop="audio">
           <el-upload
+            ref="upload"
             class="upload-demo"
             drag
             action="action"
-            ref="upload"
             :on-change="avatarChange"
             :before-upload="beforeAvatarUpload"
-            accept=".wav,.mp3">
-            <i class="el-icon-upload"></i>
+            accept=".wav,.mp3"
+          >
+            <i class="el-icon-upload" />
             <div class="el-upload__text">上传文件</div>
-            <div class="el-upload__tip" slot="tip" v-if="fileName">{{ fileName }}</div>
+            <div v-if="fileName" slot="tip" class="el-upload__tip">{{ fileName }}</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="方言意译" prop="translation">
@@ -123,28 +124,29 @@
     <el-dialog :title="textMap[update]" :visible.sync="dialogFormVisibleEdit">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:30px;">
         <el-form-item label="所属省" prop="province">
-          <el-select v-model="temp.province" @change="selectProvince" class="filter-item" placeholder="请选择">
-            <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id"/>
+          <el-select v-model="temp.province" class="filter-item" placeholder="请选择" @change="selectProvince">
+            <el-option v-for="item in district.province" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="所属市" prop="city">
           <el-select v-model="temp.city" clearable class="filter-item" placeholder="请选择">
-            <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id"/>
+            <el-option v-for="item in district.city" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <p style="color:red;float:left;">*&nbsp;</p><el-form-item label="音频文件" prop="audio">
           <el-upload
+            ref="upload"
             class="upload-demo"
             drag
             action="action"
-            ref="upload"
             :on-change="avatarChange"
             :before-upload="beforeAvatarUpload"
-            accept=".wav,.mp3">
-            <i class="el-icon-upload"></i>
+            accept=".wav,.mp3"
+          >
+            <i class="el-icon-upload" />
             <div class="el-upload__text">上传文件</div>
-            <div class="el-upload__tip" slot="tip" v-if="fileName">{{ fileName }}</div>
-            <div class="el-upload__tip" slot="tip" v-else>已存在文件</div>
+            <div v-if="fileName" slot="tip" class="el-upload__tip">{{ fileName }}</div>
+            <div v-else slot="tip" class="el-upload__tip">已存在文件</div>
           </el-upload>
         </el-form-item>
         <el-form-item label="方言意译" prop="translation">
@@ -185,10 +187,10 @@ export default {
       statusList: [{
         value: 0,
         label: '未审核'
-      },{
+      }, {
         value: 1,
         label: '不通过'
-      },{
+      }, {
         value: 2,
         label: '通过'
       }],
@@ -209,7 +211,7 @@ export default {
           translation: undefined
         }
       },
-      district:  {
+      district: {
         province: [],
         city: []
       },
@@ -239,7 +241,7 @@ export default {
       pvData: [],
       rules: {
         province: [{ required: true, message: '地区必填', trigger: 'blur' }],
-        translation: [{ required: true, message: '意译必填', trigger: 'blur' }],
+        translation: [{ required: true, message: '意译必填', trigger: 'blur' }]
       }
     }
   },
@@ -248,39 +250,46 @@ export default {
     this.getDistrict()
   },
   methods: {
-    handleAudit(){
+    handleAudit() {
       autoAudit().then(response => {
-        if(response.code == 200){
+        if (response.code == 200) {
+          // this.$notify({
+          //   message: '操作成功',
+          //   type: 'success',
+          //   duration: 2000
+          // })
+          // this.getList()
+        } else {
           this.$notify({
-            message: '操作成功',
-            type: 'success',
+            message: '操作失败',
+            type: 'error',
             duration: 2000
-          })
-          this.getList();
+          })   
+          this.getList()       
         }
       })
     },
     // 控制音频的播放与暂停
-    startPlayOrPause () {
+    startPlayOrPause() {
       return this.audio.playing ? this.pause() : this.play()
     },
     // 播放音频
-    play () {
+    play() {
       this.$refs.audio.play()
     },
     // 暂停音频
-    pause () {
+    pause() {
       this.$refs.audio.pause()
     },
     // 当音频播放
-    onPlay () {
+    onPlay() {
       this.audio.playing = true
     },
     // 当音频暂停
-    onPause () {
+    onPause() {
       this.audio.playing = false
     },
-    avatarChange(file){
+    avatarChange(file) {
       // console.log(file)
       this.fileName = file.name
       this.fileUrl = URL.createObjectURL(file.raw)
@@ -289,28 +298,28 @@ export default {
     },
     beforeAvatarUpload(file) {
       this.formData = new FormData()
-      this.formData.append('audio',file)
+      this.formData.append('audio', file)
       return false
     },
     getList() {
       this.listLoading = true
-      if (this.listQuery.search.status === ''){
+      if (this.listQuery.search.status === '') {
         this.listQuery.search.status = undefined
       }
       getAll(this.listQuery).then(response => {
-        if (Array.isArray(response.data.reslut)){
+        if (Array.isArray(response.data.reslut)) {
           this.list = response.data.reslut
         } else {
           this.list = Object.values(response.data.reslut)
         }
         this.total = response.data.count
-        if(response.data.count != 0){
+        if (response.data.count != 0) {
           this.list.forEach(l => {
-            if(l.user_id == 0){
-              l.user = { nickName : '管理员' }
+            if (l.user_id == 0) {
+              l.user = { nickName: '管理员' }
             }
             l.audio = 'http://127.0.0.1:8000/dialect/' + l.audio
-          });
+          })
         }
         console.log(this.list)
         // Just to simulate the time of the request
@@ -318,25 +327,25 @@ export default {
       })
     },
     getDistrict() {
-      let param = {
+      const param = {
         p_id: 0
       }
       getOption(param).then(response => {
         this.district.province = response.data
       })
     },
-    visibleStatus(row){
+    visibleStatus(row) {
       // console.log(row)
-      if (this.temp_id != row.id){
+      if (this.temp_id != row.id) {
         this.temp_id = row.id
       }
     },
     // 审核
-    selectStatus(value){
+    selectStatus(value) {
       // console.log({value:value,temp_id:this.temp_id})
-      const param = { 
+      const param = {
         id: this.temp_id,
-        status: value  
+        status: value
       }
       audit(param).then(response => {
         this.$notify({
@@ -347,10 +356,10 @@ export default {
       })
     },
     // 选择一级地区,获取二级地区
-    selectProvince(value){
+    selectProvince(value) {
       // console.log(value)
       this.$set(this.temp, 'city', undefined)
-      let param = {
+      const param = {
         p_id: value
       }
       getOption(param).then(response => {
@@ -381,10 +390,11 @@ export default {
     },
     // 添加
     createData() {
-      if (this.fileUrl == ''){
+      if (this.fileUrl == '') {
         this.formData = new FormData()
       }
-      if (typeof this.temp.city == 'undefined'){
+      // console.log(this.temp.city)
+      if (typeof this.temp.city === 'undefined' || this.temp.city == "") {
         this.formData.append('district_id', this.temp.province)
       } else {
         this.formData.append('district_id', this.temp.city)
@@ -410,14 +420,14 @@ export default {
     handleUpdate(row) {
       // console.log(this.district)
       this.temp = Object.assign({}, row) // copy obj
-      if (this.temp.district.p_id == 0){
+      if (this.temp.district.p_id == 0) {
         this.$set(this.temp, 'province', this.temp.district_id)
       } else {
-        let param = {
+        const param = {
           p_id: this.temp.district.p_id
         }
         getPrevious(param).then(response => {
-          this.selectProvince(response.data.id);
+          this.selectProvince(response.data.id)
           this.$set(this.temp, 'province', response.data.id)
           this.$set(this.temp, 'city', this.temp.district_id)
         })
@@ -434,11 +444,11 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          if (this.fileUrl == ''){
+          if (this.fileUrl == '') {
             this.formData = new FormData()
           }
           this.formData.append('id', this.temp.id)
-          if (typeof this.temp.city == 'undefined'){
+          if (typeof this.temp.city === 'undefined' || this.temp.city == "") {
             this.formData.append('district_id', this.temp.province)
           } else {
             this.formData.append('district_id', this.temp.city)
@@ -446,7 +456,7 @@ export default {
           this.formData.append('translation', this.temp.translation)
           this.formData.append('status', 2)
           this.$refs.upload.submit()
-          console.log(this.temp)
+          // console.log(this.temp)
           update(this.formData).then(response => {
             for (const v of this.list) {
               if (v.id === this.temp.id) {
@@ -458,6 +468,7 @@ export default {
             }
             this.getList()
             this.dialogFormVisibleEdit = false
+            this.fileName == ''
             this.$notify({
               message: '编辑成功',
               type: 'success',
@@ -471,11 +482,11 @@ export default {
     handleDelete(row) {
       const id = { id: row.id }
       deleteOne(id).then(response => {
-        this.$notify({
-          message: '删除成功',
-          type: 'success',
-          duration: 2000
-        })
+        // this.$notify({
+        //   message: '删除成功',
+        //   type: 'success',
+        //   duration: 2000
+        // })
       })
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)
