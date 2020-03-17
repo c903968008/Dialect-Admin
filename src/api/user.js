@@ -22,3 +22,19 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function getAll(query) {
+  return request({
+    url: '/user',
+    method: 'get',
+    params: query
+  })
+}
+
+export function deleteOne(data) {
+  return request({
+    url: '/user/delete',
+    method: 'post',
+    data
+  })
+}

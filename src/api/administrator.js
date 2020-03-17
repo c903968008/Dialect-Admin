@@ -2,22 +2,15 @@ import request from '@/utils/request'
 
 export function getAll(query) {
   return request({
-    url: '/role',
+    url: '/administrator',
     method: 'get',
     params: query
   })
 }
 
-export function getOption() {
-  return request({
-    url: '/role/list',
-    method: 'get'
-  })
-}
-
 export function create(data) {
   return request({
-    url: '/role/create',
+    url: '/administrator/create',
     method: 'post',
     data
   })
@@ -25,7 +18,7 @@ export function create(data) {
 
 export function update(data) {
   return request({
-    url: '/role/edit',
+    url: '/administrator/edit',
     method: 'post',
     data
   })
@@ -33,7 +26,7 @@ export function update(data) {
 
 export function deleteOne(data) {
   return request({
-    url: '/role/delete',
+    url: '/administrator/delete',
     method: 'post',
     data
   })
