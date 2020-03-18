@@ -96,7 +96,7 @@ export default {
         this.total = response.data.count
         if (response.data.count != 0) {
           this.list.forEach(list => {
-            list.image = 'http://127.0.0.1:8000/activity/' + list.image
+            list.image = this.GLOBAL.baseURL + 'activity/' + list.image
           })
         }
         this.listLoading = false

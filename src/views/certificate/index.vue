@@ -327,7 +327,7 @@ export default {
           // console.log(this.temp)
           // console.log('province:'+this.temp.province)
           // console.log('city:'+this.temp.city)
-          if (typeof this.temp.city === 'undefined' || this.temp.city == "") {
+          if (typeof this.temp.city === 'undefined' || this.temp.city == '') {
             this.temp.district_id = this.temp.province
           } else {
             this.temp.district_id = this.temp.city
@@ -373,7 +373,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          if (typeof this.temp.city === 'undefined' || this.temp.city == "") {
+          if (typeof this.temp.city === 'undefined' || this.temp.city == '') {
             this.temp.district_id = this.temp.province
           } else {
             this.temp.district_id = this.temp.city

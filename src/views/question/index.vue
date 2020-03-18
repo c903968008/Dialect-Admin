@@ -4,7 +4,7 @@
       <el-input v-model="listQuery.search.user" clearable placeholder="发布人" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="listQuery.search.dialect" clearable placeholder="正确答案" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="listQuery.search.district" clearable placeholder="地区" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input-number v-model="listQuery.search.difficulty" controls-position="right" clearable :min="1" :max="10" placeholder="难度" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input-number v-model="listQuery.search.difficulty" controls-position="right" clearable :min="1" :max="3" placeholder="难度" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column label="难度" width="60px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.difficulty }}</span>
+          <span>{{ row.diff }}</span>
         </template>
       </el-table-column>
       <el-table-column label="答对次数" width="100px" align="center">
@@ -130,7 +130,7 @@
           <el-input v-model="temp.wrong3" />
         </el-form-item>
         <el-form-item label="难度" prop="difficulty">
-          <el-input-number v-model="temp.difficulty" :min="1" :max="10" />
+          <el-input-number v-model="temp.difficulty" :min="1" :max="3" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -279,7 +279,14 @@ export default {
             if (l.user_id == 0) {
               l.user = { nickName: '管理员' }
             }
-            l.audio = 'http://127.0.0.1:8000/dialect/' + l.audio
+            if(l.difficulty == 1){
+              l.diff = '初级'
+            } else if(l.difficuty == 2){
+              l.diff = '中级'
+            } else {
+              l.diff = '高级'
+            }
+            l.audio = this.GLOBAL.baseURL + 'dialect/' + l.audio
             l.wrong_arr = l.wrong.split(',')
           })
         }
@@ -353,7 +360,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          if (typeof this.temp.city === 'undefined' || this.temp.city == "") {
+          if (typeof this.temp.city === 'undefined' || this.temp.city == '') {
             this.temp.district_id = this.temp.province
           } else {
             this.temp.district_id = this.temp.city
@@ -414,7 +421,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          if (typeof this.temp.city === 'undefined' || this.temp.city == "") {
+          if (typeof this.temp.city === 'undefined' || this.temp.city == '') {
             this.temp.district_id = this.temp.province
           } else {
             this.temp.district_id = this.temp.city

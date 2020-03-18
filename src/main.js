@@ -16,8 +16,11 @@ import router from './router'
 import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
+import global from '@/api/global.js'
 
 import * as filters from './filters' // global filters
+
+Vue.prototype.GLOBAL = global
 
 /**
  * If you don't want to use mock-server

@@ -264,8 +264,8 @@ export default {
             message: '操作失败',
             type: 'error',
             duration: 2000
-          })   
-          this.getList()       
+          })
+          this.getList()
         }
       })
     },
@@ -318,7 +318,7 @@ export default {
             if (l.user_id == 0) {
               l.user = { nickName: '管理员' }
             }
-            l.audio = 'http://127.0.0.1:8000/dialect/' + l.audio
+            l.audio = this.GLOBAL.baseURL + 'dialect/' + l.audio
           })
         }
         console.log(this.list)
@@ -394,7 +394,7 @@ export default {
         this.formData = new FormData()
       }
       // console.log(this.temp.city)
-      if (typeof this.temp.city === 'undefined' || this.temp.city == "") {
+      if (typeof this.temp.city === 'undefined' || this.temp.city == '') {
         this.formData.append('district_id', this.temp.province)
       } else {
         this.formData.append('district_id', this.temp.city)
@@ -448,7 +448,7 @@ export default {
             this.formData = new FormData()
           }
           this.formData.append('id', this.temp.id)
-          if (typeof this.temp.city === 'undefined' || this.temp.city == "") {
+          if (typeof this.temp.city === 'undefined' || this.temp.city == '') {
             this.formData.append('district_id', this.temp.province)
           } else {
             this.formData.append('district_id', this.temp.city)
@@ -461,7 +461,7 @@ export default {
             for (const v of this.list) {
               if (v.id === this.temp.id) {
                 const index = this.list.indexOf(v)
-                response.data.audio = 'http://127.0.0.1:8000/dialect/' + response.data.audio
+                response.data.audio = this.GLOBAL.baseURL + 'dialect/' + response.data.audio
                 this.list.splice(index, 1, this.temp)
                 break
               }

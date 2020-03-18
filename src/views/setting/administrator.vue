@@ -231,7 +231,7 @@ export default {
         }
         this.total = response.data.count
         this.list.forEach(list => {
-          list.avatar = 'http://127.0.0.1:8000/avatars/' + list.avatar
+          list.avatar = this.GLOBAL.baseURL + 'avatars/' + list.avatar
         })
         // Just to simulate the time of the request
         this.listLoading = false
@@ -320,7 +320,7 @@ export default {
             for (const v of this.list) {
               if (v.id === this.temp.id) {
                 const index = this.list.indexOf(v)
-                response.data.avatar = 'http://127.0.0.1:8000/avatars/' + response.data.avatar
+                response.data.avatar = this.GLOBAL.baseURL + 'avatars/' + response.data.avatar
                 this.list.splice(index, 1, response.data)
                 break
               }

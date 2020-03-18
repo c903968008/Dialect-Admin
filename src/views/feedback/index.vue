@@ -193,10 +193,10 @@ export default {
         this.total = response.data.count
         if (response.data.count != 0) {
           this.list.forEach(l => {
-            l.question.audio = 'http://127.0.0.1:8000/dialect/' + l.question.audio
+            l.question.audio = this.GLOBAL.baseURL + 'dialect/' + l.question.audio
             if (l.status == 0) {
               l.status = '未查看'
-            } else if (l.status == 1){
+            } else if (l.status == 1) {
               l.status = '未接受'
             } else {
               l.status = '已接受'
@@ -219,7 +219,7 @@ export default {
           response.data.user.nickName = '管理员'
         }
         this.question = response.data
-        this.question.audio = 'http://127.0.0.1:8000/dialect/' + this.question.audio
+        this.question.audio = this.GLOBAL.baseURL + 'dialect/' + this.question.audio
         var wrong_arr = this.question.wrong.split(',')
         this.question.wrong1 = wrong_arr[0]
         this.question.wrong2 = wrong_arr[1]

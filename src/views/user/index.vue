@@ -2,9 +2,9 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.search.nickName" clearable placeholder="用户名" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input-number controls-position="right" :min="0" v-model="listQuery.search.accuracy_min" clearable placeholder="正确率区间" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input-number v-model="listQuery.search.accuracy_min" controls-position="right" :min="0" clearable placeholder="正确率区间" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       —
-      <el-input-number controls-position="right" :max="100" v-model="listQuery.search.accuracy_max" clearable placeholder="正确率区间" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input-number v-model="listQuery.search.accuracy_max" controls-position="right" :max="100" clearable placeholder="正确率区间" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>

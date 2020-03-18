@@ -158,7 +158,7 @@ export default {
       show({ id: id }).then(response => {
         console.log(response)
         this.postForm = response.data
-        this.postForm.image = 'http://127.0.0.1:8000/activity/' + response.data.image
+        this.postForm.image = this.GLOBAL.baseURL + 'activity/' + response.data.image
         this.imageUrl = this.postForm.image
         // set tagsview title
         this.setTagsViewTitle()
